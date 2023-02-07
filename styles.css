@@ -1,0 +1,53 @@
+* {
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    background-color: #FC6471;
+}
+
+.button-container {
+    display: grid;
+    gap: 5px;
+    width: 25vw;
+    grid-template-columns: repeat(4, 1fr) ;
+    grid-template-rows: repeat(5, 1fr);
+}
+
+
+.button {
+    aspect-ratio: 1/1;
+    border-radius: 10px;
+    outline: none;
+    color: #FFFFFF;
+    font-weight: 500;
+    font-size: 23px;
+    background-color: #7d5ba6;
+    border: none;
+    transition: all .1s ease-in-out;
+}
+
+.button:hover
+{
+  opacity: 1;
+  background-color: #8CAAB7;
+  transform: scale(1.1);
+}
+
+.button:active
+{
+  background-color: rgb(136, 111, 104);
+  transform: scale(1.2);
+}
+
+#equals {
+    grid-column-start: 1;
+    grid-column-end:   3;
+    aspect-ratio: 2/1;
+}
+
+#AC {
+    grid-column-start: 3;
+    grid-column-end:   5;
+    aspect-ratio: 2/1;
+}
