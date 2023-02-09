@@ -33,6 +33,7 @@ body {
     grid-column-start: 1;
     grid-column-end: 5;
     overflow: scroll;
+    margin-bottom: 5px;
 }
 .incoming-operation {
     flex: 1;
@@ -45,6 +46,12 @@ body {
 
 .result {
     flex: 3;
+    overflow: scroll;
+    text-align: right;
+    padding-top: 5px;
+    padding-right: 5px;
+    font-weight: 500;
+    font-size: 24px;
     /* border: solid black; */
 }
 
