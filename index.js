@@ -10,26 +10,43 @@ const incoming = document.querySelector('.incoming-operation');
 const output = document.querySelector('.result');
 
 let operationPressed = false;
+let lastOperation = null;
 
-inputs.forEach(input => input.addEventListener('click', e => {  
+function evaluate(expression, operator) {
+    const key = operator.id;
+    const delimiter = {
+        plus: '+',
+        minus: '-',
+        multiply: '×',
+        divide: '÷'
+    }
+    const expressions = {
+        plus: function (a, b) {return a + b},
+        minus: function (a, b) {return a - b},
+        multiply: function (a, b) {return a * b},
+        divide: function (a, b) {return a / b}
+    }
+    const arguments = expression.split(delimiter[key]);
+    return expressions[key](Number(arguments[0]), Number(arguments[1]));
+}
+
+inputs.forEach(input => input.addEventListener('click', e => {
     if (input.classList.contains("operator")) {
-        if (operationPressed == false) {
-            incoming.textContent += input.textContent; 
+        if (!operationPressed) {
+            incoming.textContent += input.textContent;
+            lastOperation = input;
+            operationPressed = true; 
+        } else {
+            output.textContent = evaluate(incoming.textContent, lastOperation);
+            incoming.textContent = ""
+            lastOperation = input; 
+            operationPressed = false;
         }
     } else /*if number*/ {
         incoming.textContent += input.textContent;
     }    
 }));
-operators.forEach(operator => operator.addEventListener('click', e => {
-    if (!operationPressed) {
-        operationPressed = true;
-    } else {
-        //evaluate expression
-        //clear incoming screen
-        //put result onto output screen
-        //make operationPressed = false 
-    }
-}));
+
 clearButton.addEventListener('click', e => {
     incoming.textContent = "";
     output.textContent = "";
