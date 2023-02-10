@@ -29,16 +29,55 @@ function evaluate(expression, operator) {
     const arguments = expression.split(delimiter[key]);
     return expressions[key](Number(arguments[0]), Number(arguments[1]));
 }
+function endsWithNum(incomingExpression) {
+    return !isNaN(incomingExpression[incomingExpression.length - 1]);
+}
+function containsOperator(incomingExpression) {
+    let doesContainOperator = false; 
+    const expressions = ['+', '-', '÷', '×'];
+    for (const expression of expressions) {
+        doesContainOperator = incomingExpression.includes(expression);
+        if (doesContainOperator) {
+            return doesContainOperator;
+        }
+    }
+}
+function containsAns(incomingExpression) {
+    return incomingExpression.slice(0,3) === "Ans";
+}
 
 inputs.forEach(input => input.addEventListener('click', e => {
     if (input.classList.contains("operator")) {
         if (!operationPressed) {
-            incoming.textContent += input.textContent;
-            lastOperation = input;
-            operationPressed = true; 
+            if (output.textContent === "") {
+                incoming.textContent += input.textContent;
+                lastOperation = input;
+                operationPressed = true; 
+            } else {
+                if (endsWithNum(incoming.textContent)) {
+                    if (containsOperator(incoming.textContent)) { 
+                        output.textContent = evaluate(output.textContent + incoming.textContent.slice(3), lastOperation);
+                        incoming.textContent = "Ans" + input.textContent;
+                        lastOperation = input;
+                        operationPressed = false;
+                    } else {
+                        incoming.textContent += input.textContent;
+                        lastOperation = input;
+                        operationPressed = true;
+                    }
+                } else if (incoming.textContent === "") {
+                    incoming.textContent = "Ans" + input.textContent;
+                    lastOperation = input;
+                    operationPressed = true;
+                }
+            }
         } else {
-            output.textContent = evaluate(incoming.textContent, lastOperation);
-            incoming.textContent = ""
+            if (containsAns(incoming.textContent)) {
+                output.textContent = evaluate(output.textContent + incoming.textContent.slice(3), lastOperation);
+            } else {
+                output.textContent = evaluate(incoming.textContent, lastOperation);
+            }
+            incoming.textContent = "Ans" + input.textContent;
             lastOperation = input; 
             operationPressed = false;
         }
@@ -51,10 +90,19 @@ clearButton.addEventListener('click', e => {
     incoming.textContent = "";
     output.textContent = "";
     operationPressed = false;
+    lastOperation = null;
 });
 equalsButton.addEventListener('click', e => {
-    incoming.textContent = "";
-    operationPressed = false;
+    if (endsWithNum(incoming.textContent)) {
+        if (containsAns(incoming.textContent)) {
+            output.textContent = evaluate(output.textContent + incoming.textContent.slice(3), lastOperation);
+        } else {
+            output.textContent = evaluate(incoming.textContent, lastOperation);
+        }
+        incoming.textContent = "";
+        operationPressed = false;
+        lastOperation = null;
+    }
 });
 
 
