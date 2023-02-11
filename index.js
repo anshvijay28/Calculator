@@ -28,6 +28,17 @@ function evaluate(expression, operator) {
         divide: function (a, b) {return a / b}
     }
     const arguments = expression.split(delimiter[key]);
+    if (arguments.length === 3) {
+        let toBeRemoved = null;
+        for (let i = 0; i < arguments.length; i++) {
+            if (arguments[i] === "" || arguments[i] === " ") {
+                toBeRemoved = i;
+                arguments[i + 1] = "-" + arguments[i + 1];
+                break;
+            }
+        }
+        arguments.splice(toBeRemoved, 1);
+    }
     return expressions[key](Number(arguments[0]), Number(arguments[1]));
 }
 function endsWithNum(incomingExpression) {
@@ -72,9 +83,17 @@ function canAddDecimal(incomingExpression) {
     }
     return false;
 }
+function canAddNegativeSymbol(incomingExpression) {
+    if (containsOperator(incomingExpression.slice(incomingExpression.length - 1))) {
+        return true;
+    }
+    if (incoming.textContent === "") {
+        return true;
+    }
+    return false;
+}
 
 inputs.forEach(input => input.addEventListener('click', e => {
-    console.log(canAddDecimal(input.textContent));
     if (input.classList.contains("operator")) {
         if (!operationPressed) {
             if (output.textContent === "") {
@@ -121,7 +140,15 @@ inputs.forEach(input => input.addEventListener('click', e => {
         if (canAddDecimal(incoming.textContent)) {
             incoming.textContent += input.textContent;
         }
-    }  
+    } else if (input.id === "negate") {
+        if (canAddNegativeSymbol(incoming.textContent)) {
+            if (incoming.textContent === "") {
+                incoming.textContent += "-";
+            } else {
+                incoming.textContent += " -";
+            }
+        }
+    }
 }));
 
 clearButton.addEventListener('click', e => {
@@ -151,6 +178,9 @@ deleteButton.addEventListener('click', e => {
         } else if (!endsWithNum(deleted)) {
             incoming.textContent = incoming.textContent.slice(0, incoming.textContent.length - 4);
         }
+    }
+    if (incoming.textContent.slice(incoming.textContent.length - 1) === " ") {
+        incoming.textContent = incoming.textContent.slice(0, incoming.textContent.length - 1);
     }
 });
 
