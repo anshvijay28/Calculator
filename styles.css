@@ -14,7 +14,7 @@ body {
     background-color: #111344;
     border-radius: 20px;
     padding: 15px;
-    padding-right: 25px;
+    padding-right: 20px;
     width: fit-content;
 }
 
@@ -35,6 +35,12 @@ body {
     overflow: scroll;
     margin-bottom: 5px;
 }
+.top-buttons {
+    display: flex;
+    grid-column-start: 1;
+    grid-column-end: 5;
+    gap: 5px;
+}
 .incoming-operation {
     flex: 1;
     overflow: scroll;
@@ -54,7 +60,7 @@ body {
     font-size: 40px;
 }
 
-.container > button {
+button {
     aspect-ratio: 1/1;
     border-radius: 10px;
     outline: none;
@@ -66,27 +72,33 @@ body {
     transition: all .1s ease-in-out;
 }
 
-.container > button:hover
+button:hover
 {
   opacity: 1;
   background-color: #8CAAB7;
   transform: scale(1.1);
 }
 
-.container > button:active
+button:active
 {
   background-color: rgb(136, 111, 104);
   transform: scale(1.15);
 }
-
+.top-buttons > button {
+    flex: 1;
+    aspect-ratio: 4/3;
+}
 #equals {
     grid-column-start: 1;
+    grid-column-end:   2;
+}
+
+#delete {
+    grid-column-start: 2;
     grid-column-end:   3;
-    aspect-ratio: 2/1;
 }
 
 #AC {
     grid-column-start: 3;
-    grid-column-end:   5;
-    aspect-ratio: 2/1;
+    grid-column-end:   4;
 }
