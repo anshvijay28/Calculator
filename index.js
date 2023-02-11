@@ -4,6 +4,7 @@ const numbers = document.querySelectorAll('.number');
 
 const equalsButton = document.querySelector('#equals');
 const clearButton = document.querySelector('#AC');
+const deleteButton = document.querySelector('#delete');
 
 const screen = document.querySelector('.screen');
 const incoming = document.querySelector('.incoming-operation');
@@ -45,8 +46,12 @@ function containsOperator(incomingExpression) {
 function containsAns(incomingExpression) {
     return incomingExpression.slice(0,3) === "Ans";
 }
+function endsWithAns(incomingExpression) {
+    return incomingExpression.slice(incomingExpression.length - 3) === "Ans";
+}
 
 inputs.forEach(input => input.addEventListener('click', e => {
+    console.log(operationPressed);
     if (input.classList.contains("operator")) {
         if (!operationPressed) {
             if (output.textContent === "") {
@@ -69,6 +74,10 @@ inputs.forEach(input => input.addEventListener('click', e => {
                     incoming.textContent = "Ans" + input.textContent;
                     lastOperation = input;
                     operationPressed = true;
+                } else if (endsWithAns(incoming.text)) {
+                    incoming.textContent += input.textContent;
+                    lastOperation = input;
+                    operationPressed = true;
                 }
             }
         } else {
@@ -82,7 +91,9 @@ inputs.forEach(input => input.addEventListener('click', e => {
             operationPressed = false;
         }
     } else /*if number*/ {
-        incoming.textContent += input.textContent;
+        if (!endsWithAns(incoming.textContent)) {
+            incoming.textContent += input.textContent;
+        }
     }    
 }));
 
@@ -102,6 +113,17 @@ equalsButton.addEventListener('click', e => {
         incoming.textContent = "";
         operationPressed = false;
         lastOperation = null;
+    }
+});
+deleteButton.addEventListener('click', e => {
+    if (incoming.textContent !== "") {
+        let deleted = incoming.textContent.slice(incoming.textContent.length - 1);
+        incoming.textContent = incoming.textContent.slice(0, incoming.textContent.length - 1);
+        if (containsOperator(deleted)) {
+            operationPressed = false;
+        } else if (!endsWithNum(deleted)) {
+            incoming.textContent = incoming.textContent.slice(0, incoming.textContent.length - 4);
+        }
     }
 });
 
