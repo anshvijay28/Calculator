@@ -49,9 +49,32 @@ function containsAns(incomingExpression) {
 function endsWithAns(incomingExpression) {
     return incomingExpression.slice(incomingExpression.length - 3) === "Ans";
 }
+function canAddDecimal(incomingExpression) {
+    if (!endsWithNum(incomingExpression)) {
+        return false;
+    }
+    if (!containsOperator(incomingExpression) && !incomingExpression.includes(".")) {
+        return true;
+    }
+    if (containsOperator(incomingExpression)) {
+        let currentOperator = null; 
+        const operators = ['+', '-', '÷', '×'];
+        for (const operator of operators) {
+            if (incomingExpression.includes(operator)) {
+                currentOperator = operator;
+                break;
+            }
+        }
+        const numInQuestion = incomingExpression.split(currentOperator)[1];
+        if (!numInQuestion.includes(".")) {
+            return true;
+        }
+    }
+    return false;
+}
 
 inputs.forEach(input => input.addEventListener('click', e => {
-    console.log(operationPressed);
+    console.log(canAddDecimal(input.textContent));
     if (input.classList.contains("operator")) {
         if (!operationPressed) {
             if (output.textContent === "") {
@@ -74,7 +97,7 @@ inputs.forEach(input => input.addEventListener('click', e => {
                     incoming.textContent = "Ans" + input.textContent;
                     lastOperation = input;
                     operationPressed = true;
-                } else if (endsWithAns(incoming.text)) {
+                } else if (endsWithAns(incoming.textContent)) {
                     incoming.textContent += input.textContent;
                     lastOperation = input;
                     operationPressed = true;
@@ -90,11 +113,15 @@ inputs.forEach(input => input.addEventListener('click', e => {
             lastOperation = input; 
             operationPressed = false;
         }
-    } else /*if number*/ {
+    } else if (input.classList.contains("number")) {
         if (!endsWithAns(incoming.textContent)) {
             incoming.textContent += input.textContent;
         }
-    }    
+    } else if (input.id === "decimal") {
+        if (canAddDecimal(incoming.textContent)) {
+            incoming.textContent += input.textContent;
+        }
+    }  
 }));
 
 clearButton.addEventListener('click', e => {
